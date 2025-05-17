@@ -1,1 +1,176 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CinePlates</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fffaf5;
+      color: #333;
+    }
+    header {
+      background-color: #222;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    .search-bar {
+      text-align: center;
+      margin: 1.5rem;
+    }
+    input {
+      width: 70%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .recipe-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .recipe-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .recipe-card:hover {
+      transform: scale(1.03);
+    }
+    .recipe-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    .recipe-card h3 {
+      margin: 1rem;
+      font-size: 1.2rem;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .close-btn {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>CinePlates</h1>
+    <p>Recipes from your favorite movies & shows</p>
+  </header>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="Search for a movie or dish..." />
+  </div>
+  <div class="recipe-container" id="recipes"></div>  <div class="modal" id="recipeModal">
+    <div class="modal-content" id="modalContent">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <div id="modalBody"></div>
+    </div>
+  </div>  <script>
+    const recipes = [
+      {
+        title: "Ratatouille",
+        from: "Ratatouille",
+        image: "https://www.themealdb.com/images/media/meals/wyxwsp1486979827.jpg",
+        ingredients: ["Eggplant", "Zucchini", "Tomatoes", "Garlic", "Olive Oil"],
+        steps: [
+          "Slice all vegetables thinly",
+          "Layer them in a baking dish",
+          "Drizzle with olive oil & herbs",
+          "Bake at 375F for 45 minutes"
+        ]
+      },
+      {
+        title: "Krabby Patty",
+        from: "SpongeBob SquarePants",
+        image: "https://static.wikia.nocookie.net/spongebob/images/d/dd/Krabby_Patty.png",
+        ingredients: ["Burger bun", "Secret sauce", "Patty", "Lettuce", "Tomato"],
+        steps: [
+          "Toast bun",
+          "Grill patty",
+          "Assemble with sauce and toppings"
+        ]
+      },
+      {
+        title: "Butterbeer",
+        from: "Harry Potter",
+        image: "https://static1.srcdn.com/wordpress/wp-content/uploads/2021/06/Harry-Potter-Butterbeer-Universal-Studios.jpg",
+        ingredients: ["Cream Soda", "Butterscotch Syrup", "Whipped Cream"],
+        steps: [
+          "Heat cream soda with syrup",
+          "Pour into mug",
+          "Top with whipped cream"
+        ]
+      }
+    ];
 
+    const container = document.getElementById("recipes");
+    const modal = document.getElementById("recipeModal");
+    const modalBody = document.getElementById("modalBody");
+
+    function displayRecipes(filtered = recipes) {
+      container.innerHTML = "";
+      filtered.forEach(recipe => {
+        const card = document.createElement("div");
+        card.className = "recipe-card";
+        card.innerHTML = `
+          <img src="${recipe.image}" alt="${recipe.title}" />
+          <h3>${recipe.title} <br><small>(${recipe.from})</small></h3>
+        `;
+        card.onclick = () => showRecipe(recipe);
+        container.appendChild(card);
+      });
+    }
+
+    function showRecipe(recipe) {
+      modal.style.display = "flex";
+      modalBody.innerHTML = `
+        <h2>${recipe.title} <small>from <em>${recipe.from}</em></small></h2>
+        <h4>Ingredients:</h4>
+        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
+        <h4>Steps:</h4>
+        <ol>${recipe.steps.map(s => `<li>${s}</li>`).join('')}</ol>
+      `;
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    document.getElementById("search").addEventListener("input", function () {
+      const value = this.value.toLowerCase();
+      const filtered = recipes.filter(r =>
+        r.title.toLowerCase().includes(value) ||
+        r.from.toLowerCase().includes(value)
+      );
+      displayRecipes(filtered);
+    });
+
+    displayRecipes();
+  </script></body>
+</html>
