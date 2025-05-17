@@ -3,128 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>CinePlates - Recipes from Movies & TV</title>
+  <title>Quantum Recipes</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: #1e1e1e;
-      color: #fff;
       margin: 0;
-      padding-bottom: 80px;
+      padding: 0;
+      background: #f4f4f9;
+      color: #333;
     }
     header {
-      background: #ff3c38;
+      background: #3b0a54;
+      color: white;
       padding: 1rem;
       text-align: center;
-      font-size: 2rem;
-      font-weight: bold;
-      color: white;
     }
     .container {
-      padding: 2rem;
+      padding: 1rem;
+      max-width: 1000px;
+      margin: auto;
     }
-    input[type=text] {
-      padding: 0.5rem;
-      width: 100%;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 5px;
-      border: none;
-    }
-    .card {
-      background: #2a2a2a;
-      border-radius: 10px;
+    .recipe-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 1rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
-    .card h2 {
-      color: #f5c518;
-      margin-top: 0;
+    .recipe-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
     }
-    .premium {
-      background: #444;
-      padding: 1rem;
-      border-radius: 10px;
-      margin-top: 2rem;
-      text-align: center;
+    .premium-badge {
+      background: gold;
+      color: #000;
+      padding: 2px 6px;
+      font-size: 12px;
+      border-radius: 4px;
+      margin-left: 10px;
     }
-    .premium button {
-      background: #ff9900;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      font-size: 1rem;
-      margin-top: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    footer {
-      background: #111;
-      color: #aaa;
-      text-align: center;
-      padding: 1rem;
-      position: fixed;
-      bottom: 0;
-      width: 100%;
+    .ingredients, .instructions {
+      margin-top: 0.5rem;
     }
   </style>
 </head>
 <body>
   <header>
-    CinePlates
+    <h1>Quantum Recipes</h1>
+    <p>Game & Movie-Inspired Recipes</p>
+    <label>
+      <input type="checkbox" id="premiumToggle"> I have Premium
+    </label>
   </header>
 
-  <div class="container">
-    <input type="text" id="search" placeholder="Search recipes..." onkeyup="filterRecipes()" />
-
-    <div id="recipes">
-      <div class="card">
-        <h2>Ratatouille – Ratatouille (2007)</h2>
-        <p>Layered vegetables, tomato sauce, baked beautifully. A classic.</p>
-      </div>
-      <div class="card">
-        <h2>Krabby Patty – SpongeBob</h2>
-        <p>Bun, lettuce, patty, cheese, pickles… secret sauce (unlocked with premium).</p>
-      </div>
-      <div class="card">
-        <h2>Lembas Bread – Lord of the Rings</h2>
-        <p>Elvish travel bread with honey, oats, and a touch of vanilla.</p>
-      </div>
-      <div class="card">
-        <h2>Wakandan Grilled Bass – Black Panther</h2>
-        <p>Spiced fish grilled in banana leaves with herbs. Premium recipe.</p>
-      </div>
-      <div class="card">
-        <h2>Ghibli Breakfast – Howl's Moving Castle</h2>
-        <p>Bacon, eggs, butter toast, and hot tea. Comfort on a plate.</p>
-      </div>
-    </div>
-
-    <div class="premium">
-      <h3>Want More?</h3>
-      <p>Unlock 100+ exclusive recipes from Marvel, anime, K-Dramas, and more.</p>
-      <button onclick="subscribe()">Subscribe – $3.99/month</button>
-    </div>
-  </div>
-
-  <footer>
-    © 2025 CinePlates by Quantum Core
-  </footer>
+  <div class="container" id="recipesContainer"></div>
 
   <script>
-    function filterRecipes() {
-      const input = document.getElementById('search').value.toLowerCase();
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        card.style.display = text.includes(input) ? 'block' : 'none';
+    const recipes = [
+      {
+        name: "Minecraft Lava Chicken",
+        type: "game",
+        premium: false,
+        description: "Fiery grilled chicken inspired by Minecraft.",
+        ingredients: [
+          "1 whole chicken", "2 sticks butter", "Salt", "Pepper", 
+          "Garlic powder", "Chili powder", "1 tbsp flour"
+        ],
+        instructions: [
+          "Preheat oven to 375°F.", 
+          "Rub chicken with butter and spices.", 
+          "Sprinkle flour over it.", 
+          "Roast for 1.5 hours.", 
+          "Rest before serving."
+        ],
+        image: "https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/img/minecraft-creeper-face.jpg"
+      },
+      {
+        name: "Ratatouille (From Ratatouille)",
+        type: "movie",
+        premium: true,
+        description: "A classic French dish recreated from the Pixar film.",
+        ingredients: [
+          "1 eggplant", "1 zucchini", "1 yellow squash", 
+          "2 bell peppers", "Olive oil", "Tomato sauce", "Herbs"
+        ],
+        instructions: [
+          "Slice all vegetables thinly.", 
+          "Layer them on tomato sauce in a baking dish.", 
+          "Drizzle with olive oil and herbs.", 
+          "Bake at 375°F for 45 minutes."
+        ],
+        image: "https://upload.wikimedia.org/wikipedia/commons/8/85/Ratatouille_by_Andrea_Nguyen.jpg"
+      }
+    ];
+
+    // Add dummy recipes for a total of 35
+    for (let i = 2; i < 35; i++) {
+      recipes.push({
+        name: `Epic Dish #${i + 1}`,
+        type: i % 2 === 0 ? "game" : "movie",
+        premium: i >= 20,
+        description: `Fictional meal #${i + 1} loved by characters.`,
+        ingredients: ["Magic spice", "Meat/veggie", "Fantasy sauce"],
+        instructions: [
+          "Add ingredients together.",
+          "Cook on high flame for 20 min.",
+          "Garnish with imagination."
+        ],
+        image: "https://placehold.co/400x250?text=Dish+" + (i + 1)
       });
     }
 
-    function subscribe() {
-      alert(\"Subscribed! Premium recipes unlocked. (Later add Stripe or PayPal)\");
-    }
+    const renderRecipes = () => {
+      const isPremium = document.getElementById("premiumToggle").checked;
+      const container = document.getElementById("recipesContainer");
+      container.innerHTML = "";
+
+      const visibleRecipes = isPremium ? recipes : recipes.filter((r, i) => !r.premium);
+
+      if (visibleRecipes.length === 0) {
+        container.innerHTML = "<p>No recipes available. Enable Premium to view more.</p>";
+        return;
+      }
+
+      visibleRecipes.forEach(recipe => {
+        const div = document.createElement("div");
+        div.className = "recipe-card";
+
+        div.innerHTML = `
+          <h2>${recipe.name} ${recipe.premium ? '<span class="premium-badge">Premium</span>' : ""}</h2>
+          <p><strong>From:</strong> ${recipe.type}</p>
+          <p>${recipe.description}</p>
+          <img src="${recipe.image}" alt="${recipe.name}">
+          <div class="ingredients">
+            <strong>Ingredients:</strong>
+            <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+          </div>
+          <div class="instructions">
+            <strong>Instructions:</strong>
+            <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join("")}</ol>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    };
+
+    document.getElementById("premiumToggle").addEventListener("change", renderRecipes);
+    renderRecipes();
   </script>
 </body>
 </html>
