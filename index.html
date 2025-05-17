@@ -1,176 +1,130 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CinePlates</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CinePlates - Recipes from Movies & TV</title>
   <style>
     body {
-      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: #fffaf5;
-      color: #333;
+      background: #1e1e1e;
+      color: #fff;
+      margin: 0;
+      padding-bottom: 80px;
     }
     header {
-      background-color: #222;
-      color: white;
+      background: #ff3c38;
       padding: 1rem;
       text-align: center;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
     }
-    .search-bar {
-      text-align: center;
-      margin: 1.5rem;
-    }
-    input {
-      width: 70%;
-      padding: 0.7rem;
-      font-size: 1rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .recipe-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
+    .container {
       padding: 2rem;
     }
-    .recipe-card {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-    }
-    .recipe-card:hover {
-      transform: scale(1.03);
-    }
-    .recipe-card img {
+    input[type=text] {
+      padding: 0.5rem;
       width: 100%;
-      height: 200px;
-      object-fit: cover;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+      border-radius: 5px;
+      border: none;
     }
-    .recipe-card h3 {
-      margin: 1rem;
-      font-size: 1.2rem;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: rgba(0,0,0,0.7);
-      justify-content: center;
-      align-items: center;
-    }
-    .modal-content {
-      background: white;
-      padding: 2rem;
+    .card {
+      background: #2a2a2a;
       border-radius: 10px;
-      max-width: 600px;
-      max-height: 80vh;
-      overflow-y: auto;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
     }
-    .close-btn {
-      float: right;
-      font-size: 1.5rem;
+    .card h2 {
+      color: #f5c518;
+      margin-top: 0;
+    }
+    .premium {
+      background: #444;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .premium button {
+      background: #ff9900;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      font-size: 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
       cursor: pointer;
+    }
+    footer {
+      background: #111;
+      color: #aaa;
+      text-align: center;
+      padding: 1rem;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>CinePlates</h1>
-    <p>Recipes from your favorite movies & shows</p>
+    CinePlates
   </header>
-  <div class="search-bar">
-    <input type="text" id="search" placeholder="Search for a movie or dish..." />
-  </div>
-  <div class="recipe-container" id="recipes"></div>  <div class="modal" id="recipeModal">
-    <div class="modal-content" id="modalContent">
-      <span class="close-btn" onclick="closeModal()">&times;</span>
-      <div id="modalBody"></div>
+
+  <div class="container">
+    <input type="text" id="search" placeholder="Search recipes..." onkeyup="filterRecipes()" />
+
+    <div id="recipes">
+      <div class="card">
+        <h2>Ratatouille – Ratatouille (2007)</h2>
+        <p>Layered vegetables, tomato sauce, baked beautifully. A classic.</p>
+      </div>
+      <div class="card">
+        <h2>Krabby Patty – SpongeBob</h2>
+        <p>Bun, lettuce, patty, cheese, pickles… secret sauce (unlocked with premium).</p>
+      </div>
+      <div class="card">
+        <h2>Lembas Bread – Lord of the Rings</h2>
+        <p>Elvish travel bread with honey, oats, and a touch of vanilla.</p>
+      </div>
+      <div class="card">
+        <h2>Wakandan Grilled Bass – Black Panther</h2>
+        <p>Spiced fish grilled in banana leaves with herbs. Premium recipe.</p>
+      </div>
+      <div class="card">
+        <h2>Ghibli Breakfast – Howl's Moving Castle</h2>
+        <p>Bacon, eggs, butter toast, and hot tea. Comfort on a plate.</p>
+      </div>
     </div>
-  </div>  <script>
-    const recipes = [
-      {
-        title: "Ratatouille",
-        from: "Ratatouille",
-        image: "https://www.themealdb.com/images/media/meals/wyxwsp1486979827.jpg",
-        ingredients: ["Eggplant", "Zucchini", "Tomatoes", "Garlic", "Olive Oil"],
-        steps: [
-          "Slice all vegetables thinly",
-          "Layer them in a baking dish",
-          "Drizzle with olive oil & herbs",
-          "Bake at 375F for 45 minutes"
-        ]
-      },
-      {
-        title: "Krabby Patty",
-        from: "SpongeBob SquarePants",
-        image: "https://static.wikia.nocookie.net/spongebob/images/d/dd/Krabby_Patty.png",
-        ingredients: ["Burger bun", "Secret sauce", "Patty", "Lettuce", "Tomato"],
-        steps: [
-          "Toast bun",
-          "Grill patty",
-          "Assemble with sauce and toppings"
-        ]
-      },
-      {
-        title: "Butterbeer",
-        from: "Harry Potter",
-        image: "https://static1.srcdn.com/wordpress/wp-content/uploads/2021/06/Harry-Potter-Butterbeer-Universal-Studios.jpg",
-        ingredients: ["Cream Soda", "Butterscotch Syrup", "Whipped Cream"],
-        steps: [
-          "Heat cream soda with syrup",
-          "Pour into mug",
-          "Top with whipped cream"
-        ]
-      }
-    ];
 
-    const container = document.getElementById("recipes");
-    const modal = document.getElementById("recipeModal");
-    const modalBody = document.getElementById("modalBody");
+    <div class="premium">
+      <h3>Want More?</h3>
+      <p>Unlock 100+ exclusive recipes from Marvel, anime, K-Dramas, and more.</p>
+      <button onclick="subscribe()">Subscribe – $3.99/month</button>
+    </div>
+  </div>
 
-    function displayRecipes(filtered = recipes) {
-      container.innerHTML = "";
-      filtered.forEach(recipe => {
-        const card = document.createElement("div");
-        card.className = "recipe-card";
-        card.innerHTML = `
-          <img src="${recipe.image}" alt="${recipe.title}" />
-          <h3>${recipe.title} <br><small>(${recipe.from})</small></h3>
-        `;
-        card.onclick = () => showRecipe(recipe);
-        container.appendChild(card);
+  <footer>
+    © 2025 CinePlates by Quantum Core
+  </footer>
+
+  <script>
+    function filterRecipes() {
+      const input = document.getElementById('search').value.toLowerCase();
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(input) ? 'block' : 'none';
       });
     }
 
-    function showRecipe(recipe) {
-      modal.style.display = "flex";
-      modalBody.innerHTML = `
-        <h2>${recipe.title} <small>from <em>${recipe.from}</em></small></h2>
-        <h4>Ingredients:</h4>
-        <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join('')}</ul>
-        <h4>Steps:</h4>
-        <ol>${recipe.steps.map(s => `<li>${s}</li>`).join('')}</ol>
-      `;
+    function subscribe() {
+      alert(\"Subscribed! Premium recipes unlocked. (Later add Stripe or PayPal)\");
     }
-
-    function closeModal() {
-      modal.style.display = "none";
-    }
-
-    document.getElementById("search").addEventListener("input", function () {
-      const value = this.value.toLowerCase();
-      const filtered = recipes.filter(r =>
-        r.title.toLowerCase().includes(value) ||
-        r.from.toLowerCase().includes(value)
-      );
-      displayRecipes(filtered);
-    });
-
-    displayRecipes();
-  </script></body>
+  </script>
+</body>
 </html>
