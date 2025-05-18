@@ -3,155 +3,235 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Quantum Recipes</title>
+  <title>Famous TV & Movie Recipes</title>
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
+    :root {
+      --bg: #fff4ec;
+      --card-bg: #fff;
+      --text: #333;
+      --primary: #ff6b6b;
+    }
+
+    [data-theme="dark"] {
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --text: #f5f5f5;
+      --primary: #ff6b6b;
+    }
+
+    * {
       margin: 0;
       padding: 0;
-      background: #f4f4f9;
-      color: #333;
+      box-sizing: border-box;
     }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
     header {
-      background: #3b0a54;
-      color: white;
-      padding: 1rem;
+      background: var(--primary);
+      padding: 1.5rem;
       text-align: center;
+      color: white;
     }
+
     .container {
-      padding: 1rem;
       max-width: 1000px;
       margin: auto;
+      padding: 2rem;
     }
-    .recipe-card {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+    .search-bar {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .search-bar input {
+      padding: 0.6rem;
+      font-size: 1rem;
+      flex: 1;
+      margin-right: 1rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .toggle {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .recipes {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-body {
       padding: 1rem;
-      margin-bottom: 1.5rem;
     }
-    .recipe-card img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      margin-top: 10px;
+
+    .card-body h3 {
+      margin-bottom: 0.5rem;
     }
-    .premium-badge {
-      background: gold;
-      color: #000;
-      padding: 2px 6px;
-      font-size: 12px;
-      border-radius: 4px;
-      margin-left: 10px;
+
+    .card-body p {
+      font-size: 0.95rem;
     }
-    .ingredients, .instructions {
-      margin-top: 0.5rem;
+
+    .card-body ul {
+      padding-left: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      background: #222;
+      color: white;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Quantum Recipes</h1>
-    <p>Game & Movie-Inspired Recipes</p>
-    <label>
-      <input type="checkbox" id="premiumToggle"> I have Premium
-    </label>
+    <h1>Famous TV & Movie Recipes</h1>
+    <p>Cook your favorite dishes from your favorite shows and films</p>
   </header>
 
-  <div class="container" id="recipesContainer"></div>
+  <div class="container">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search for a recipe...">
+      <button class="toggle" onclick="toggleTheme()">Toggle Theme</button>
+    </div>
+    <div class="recipes" id="recipeList"></div>
+  </div>
+
+  <footer>
+    &copy; 2025 Quantum Core | Recipe App
+  </footer>
 
   <script>
     const recipes = [
       {
-        name: "Minecraft Lava Chicken",
-        type: "game",
-        premium: false,
-        description: "Fiery grilled chicken inspired by Minecraft.",
-        ingredients: [
-          "1 whole chicken", "2 sticks butter", "Salt", "Pepper", 
-          "Garlic powder", "Chili powder", "1 tbsp flour"
-        ],
-        instructions: [
-          "Preheat oven to 375°F.", 
-          "Rub chicken with butter and spices.", 
-          "Sprinkle flour over it.", 
-          "Roast for 1.5 hours.", 
-          "Rest before serving."
-        ],
-        image: "https://www.minecraft.net/etc.clientlibs/minecraft/clientlibs/main/resources/img/minecraft-creeper-face.jpg"
+        name: "Goku's Ramen Bowl (Dragon Ball)",
+        image: "https://i.imgur.com/w2EtCk2.jpg",
+        ingredients: ["Ramen noodles", "Broth", "Boiled egg", "Pork belly", "Scallions", "Soy sauce"],
+        instructions: "Cook noodles. Simmer broth with soy sauce. Add toppings. Serve hot like Goku!"
       },
       {
-        name: "Ratatouille (From Ratatouille)",
-        type: "movie",
-        premium: true,
-        description: "A classic French dish recreated from the Pixar film.",
-        ingredients: [
-          "1 eggplant", "1 zucchini", "1 yellow squash", 
-          "2 bell peppers", "Olive oil", "Tomato sauce", "Herbs"
-        ],
-        instructions: [
-          "Slice all vegetables thinly.", 
-          "Layer them on tomato sauce in a baking dish.", 
-          "Drizzle with olive oil and herbs.", 
-          "Bake at 375°F for 45 minutes."
-        ],
-        image: "https://upload.wikimedia.org/wikipedia/commons/8/85/Ratatouille_by_Andrea_Nguyen.jpg"
+        name: "Chilli Dog (Sonic)",
+        image: "https://i.imgur.com/JXzRpUm.jpg",
+        ingredients: ["Hot dog buns", "Sausages", "Beef chili", "Cheddar", "Onions", "Mustard"],
+        instructions: "Grill sausages. Prepare chili. Assemble in bun and top with cheese and onions."
+      },
+      {
+        name: "Steven's Together Breakfast (Steven Universe)",
+        image: "https://i.imgur.com/nKjcqUe.jpg",
+        ingredients: ["Waffles", "Whipped cream", "Strawberries", "Maple syrup", "Popcorn"],
+        instructions: "Stack waffles, layer whipped cream and fruit, drizzle syrup, and sprinkle popcorn."
+      },
+      {
+        name: "Lava Chicken (Minecraft Style)",
+        image: "https://i.imgur.com/Yl9mZVE.jpg",
+        ingredients: ["Chicken breast", "Cayenne pepper", "Paprika", "Garlic", "Oil"],
+        instructions: "Marinate chicken in spices. Cook until spicy and red like lava."
+      },
+      {
+        name: "Donuts (The Simpsons)",
+        image: "https://i.imgur.com/5rGZfke.jpg",
+        ingredients: ["Flour", "Sugar", "Yeast", "Eggs", "Milk", "Glaze", "Sprinkles"],
+        instructions: "Prepare dough, fry until golden, glaze and decorate with sprinkles."
+      },
+      {
+        name: "Ice Bear's Pancakes (We Bare Bears)",
+        image: "https://i.imgur.com/jH29oJz.jpg",
+        ingredients: ["Pancake mix", "Milk", "Eggs", "Butter", "Maple syrup"],
+        instructions: "Mix batter, cook pancakes, and top with butter and syrup like Ice Bear would."
+      },
+      {
+        name: "Krabby Patty (SpongeBob SquarePants)",
+        image: "https://i.imgur.com/NK9xAGj.jpg",
+        ingredients: ["Bun", "Lettuce", "Tomato", "Pickle", "Patty", "Secret sauce"],
+        instructions: "Grill patty, stack ingredients carefully, and add secret sauce (ketchup + mayo)."
+      },
+      {
+        name: "Ratatouille (Ratatouille Movie)",
+        image: "https://i.imgur.com/M07tvTJ.jpg",
+        ingredients: ["Eggplant", "Zucchini", "Tomatoes", "Bell peppers", "Herbs", "Tomato sauce"],
+        instructions: "Slice vegetables, layer over sauce, and bake at 375°F for 45 mins."
+      },
+      {
+        name: "Beef Bourguignon (Julia & Julia)",
+        image: "https://i.imgur.com/bx2npn8.jpg",
+        ingredients: ["Beef", "Red wine", "Carrots", "Onions", "Mushrooms", "Garlic", "Herbs"],
+        instructions: "Sear beef, simmer with wine and vegetables, and cook until tender."
+      },
+      {
+        name: "Butterbeer (Harry Potter)",
+        image: "https://i.imgur.com/PKu4Ucz.jpg",
+        ingredients: ["Cream soda", "Butterscotch syrup", "Whipped cream", "Vanilla extract"],
+        instructions: "Mix soda and syrup, top with cream and enjoy chilled."
       }
     ];
 
-    // Add dummy recipes for a total of 35
-    for (let i = 2; i < 35; i++) {
-      recipes.push({
-        name: `Epic Dish #${i + 1}`,
-        type: i % 2 === 0 ? "game" : "movie",
-        premium: i >= 20,
-        description: `Fictional meal #${i + 1} loved by characters.`,
-        ingredients: ["Magic spice", "Meat/veggie", "Fantasy sauce"],
-        instructions: [
-          "Add ingredients together.",
-          "Cook on high flame for 20 min.",
-          "Garnish with imagination."
-        ],
-        image: "https://placehold.co/400x250?text=Dish+" + (i + 1)
-      });
+    const recipeList = document.getElementById("recipeList");
+    const searchInput = document.getElementById("searchInput");
+
+    function displayRecipes(filter = "") {
+      recipeList.innerHTML = "";
+      recipes
+        .filter(r => r.name.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(recipe => {
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = `
+            <img src="${recipe.image}" alt="${recipe.name}">
+            <div class="card-body">
+              <h3>${recipe.name}</h3>
+              <p><strong>Ingredients:</strong></p>
+              <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
+              <p><strong>Instructions:</strong> ${recipe.instructions}</p>
+            </div>
+          `;
+          recipeList.appendChild(card);
+        });
     }
 
-    const renderRecipes = () => {
-      const isPremium = document.getElementById("premiumToggle").checked;
-      const container = document.getElementById("recipesContainer");
-      container.innerHTML = "";
+    function toggleTheme() {
+      document.body.dataset.theme = document.body.dataset.theme === "dark" ? "light" : "dark";
+    }
 
-      const visibleRecipes = isPremium ? recipes : recipes.filter((r, i) => !r.premium);
+    searchInput.addEventListener("input", e => {
+      displayRecipes(e.target.value);
+    });
 
-      if (visibleRecipes.length === 0) {
-        container.innerHTML = "<p>No recipes available. Enable Premium to view more.</p>";
-        return;
-      }
-
-      visibleRecipes.forEach(recipe => {
-        const div = document.createElement("div");
-        div.className = "recipe-card";
-
-        div.innerHTML = `
-          <h2>${recipe.name} ${recipe.premium ? '<span class="premium-badge">Premium</span>' : ""}</h2>
-          <p><strong>From:</strong> ${recipe.type}</p>
-          <p>${recipe.description}</p>
-          <img src="${recipe.image}" alt="${recipe.name}">
-          <div class="ingredients">
-            <strong>Ingredients:</strong>
-            <ul>${recipe.ingredients.map(i => `<li>${i}</li>`).join("")}</ul>
-          </div>
-          <div class="instructions">
-            <strong>Instructions:</strong>
-            <ol>${recipe.instructions.map(i => `<li>${i}</li>`).join("")}</ol>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    };
-
-    document.getElementById("premiumToggle").addEventListener("change", renderRecipes);
-    renderRecipes();
+    displayRecipes();
   </script>
 </body>
 </html>
